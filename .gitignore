@@ -1,0 +1,36 @@
+# ============================================
+# Real-Time Financial Fraud Detection Pipeline
+# ============================================
+
+# Data files (too large for Git)
+data/*.csv
+
+# Trained model artifacts (reproduce via pipeline)
+models/*.joblib
+models/*.png
+models/training.log
+
+# Generated reports
+training_report.md
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Charts from legacy scripts
+chart_*.png
