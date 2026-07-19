@@ -129,3 +129,26 @@ results = predictor.predict_batch(df)
 - **XGBoost 3.3** — Gradient boosting classifier
 - **imbalanced-learn 0.14** — SMOTE oversampling
 - **matplotlib / seaborn** — Visualisation
+## Monitoring Setup (Week 4)
+
+### Monitoring Stack
+
+- Grafana
+- Prometheus
+
+### Local Access
+
+Grafana Dashboard:
+http://localhost:3000
+
+Prometheus Server:
+http://localhost:9090
+
+### Configuration Status
+
+- Grafana installed successfully.
+- Prometheus installed successfully.
+- Prometheus configured as Grafana data source.
+- Connection verified successfully.
+
+This monitoring stack will be used to visualize fraud detection metrics and system performance during deployment.
