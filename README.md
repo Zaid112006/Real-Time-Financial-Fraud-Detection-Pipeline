@@ -129,27 +129,34 @@ results = predictor.predict_batch(df)
 - **XGBoost 3.3** — Gradient boosting classifier
 - **imbalanced-learn 0.14** — SMOTE oversampling
 - **matplotlib / seaborn** — Visualisation
-
 ## Monitoring Setup (Week 4)
 
 ### Monitoring Stack
 
-- Grafana
-- Prometheus
+* **Grafana** — Used for creating real-time monitoring dashboards.
+* **Prometheus** — Used for collecting and storing monitoring metrics.
+* **Windows Exporter** — Used for collecting Windows system metrics such as CPU and memory usage.
 
 ### Local Access
 
-**Grafana Dashboard:**  
+**Grafana Dashboard:**
 http://localhost:3000
 
-**Prometheus Server:**  
+**Prometheus Server:**
 http://localhost:9090
 
 ### Configuration Status
 
-- Grafana installed successfully.
-- Prometheus installed successfully.
-- Prometheus configured as Grafana data source.
-- Connection verified successfully.
+* Grafana installed and configured successfully.
+* Prometheus installed and running successfully.
+* Prometheus connected as a Grafana data source.
+* FastAPI monitoring integration added using `prometheus_fastapi_instrumentator`.
+* `/` and `/health` monitoring endpoints created.
+* Windows Exporter configured on port `9182`.
+* Prometheus configured to scrape Windows Exporter metrics.
+* `windows-exporter` target status verified as **UP** in Prometheus.
+* Monitoring setup prepared for real-time visualization of fraud detection and system performance metrics.
 
-This monitoring stack will be used to visualize fraud detection metrics and system performance during deployment.
+### Purpose
+
+This monitoring stack is used to visualize and monitor fraud detection metrics, API health, and system performance during the deployment phase of the Real-Time Financial Fraud Detection Pipeline.
