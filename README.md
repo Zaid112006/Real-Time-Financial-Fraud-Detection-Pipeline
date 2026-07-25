@@ -177,3 +177,92 @@ http://localhost:9090
 1. Open Grafana → **Dashboards** → **New** → **Import**
 2. Upload `dashboard.json`
 3. Select **Prometheus** as the data source when prompted
+
+
+## Fraud Prediction API (Week 4)
+
+### Overview
+
+The FastAPI application now serves live fraud predictions in addition to
+health/monitoring endpoints. Predictions are powered by the trained
+`Random Forest` model (see `models/best_model.joblib`), loaded once at
+application startup for low-latency responses.
+
+### Setup — Generating the Model Artifacts
+
+Model files (`models/*.joblib`) are **not committed to this repository**
+(see `.gitignore`) since they are large, reproducible binaries. To run the
+API locally, generate them yourself:
+
+1. Obtain the PaySim dataset (`transactions_train.csv`) and place it at:
+   ```
+   data/transactions_train.csv
+   ```
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Run the training pipeline:
+   ```
+   python main.py
+   ```
+   This produces `models/best_model.joblib`, `label_encoder.joblib`,
+   `standard_scaler.joblib`, `feature_names.joblib`, and
+   `optimal_threshold.joblib`.
+
+### Running the API
+
+```
+uvicorn fraud_monitoring_app:app --reload
+```
+
+Interactive API docs (Swagger UI): http://127.0.0.1:8000/docs
+
+### Endpoints
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/` | GET | API status message |
+| `/health` | GET | Health check |
+| `/predict` | POST | Predict fraud for a single transaction |
+| `/predict/batch` | POST | Predict fraud for a batch of transactions |
+| `/metrics` | GET | Prometheus metrics (auto-exposed) |
+
+### Example — `/predict`
+
+**Request:**
+```json
+{
+  "step": 1,
+  "type": "TRANSFER",
+  "amount": 181,
+  "nameOrig": "C1305486145",
+  "oldbalanceOrig": 181,
+  "newbalanceOrig": 0,
+  "nameDest": "C553264065",
+  "oldbalanceDest": 0,
+  "newbalanceDest": 0
+}
+```
+
+**Response:**
+```json
+{
+  "is_fraud": true,
+  "probability": 1.0,
+  "threshold": 0.379
+}
+```
+
+### Model Performance
+
+| Metric | Value |
+|---|---|
+| Model | Random Forest (class_weight) |
+| F1-Score | 0.9889 |
+| Precision | 1.0000 |
+| Recall | 0.9781 |
+| Optimal Threshold | 0.379 |
+
+Full training report: `training_report.md` (generated locally after running
+`main.py`, not committed — see `.gitignore`).
