@@ -152,11 +152,28 @@ http://localhost:9090
 * Prometheus connected as a Grafana data source.
 * FastAPI monitoring integration added using `prometheus_fastapi_instrumentator`.
 * `/` and `/health` monitoring endpoints created.
-* Windows Exporter configured on port `9182`.
+* Windows Exporter configured on port `9182` with `cpu`, `memory`, `os`, `net`, `logical_disk`, and `system` collectors enabled.
 * Prometheus configured to scrape Windows Exporter metrics.
-* `windows-exporter` target status verified as **UP** in Prometheus.
-* Monitoring setup prepared for real-time visualization of fraud detection and system performance metrics.
+* Prometheus configured to scrape FastAPI metrics on port `8000`.
+* `windows-exporter`, `prometheus`, and `fastapi` targets all verified as **UP** in Prometheus.
+* Grafana dashboard built and saved with live panels for CPU Usage, Memory Usage, and Fraud API Health.
+* Dashboard configuration exported and version-controlled as `dashboard.json`.
+* Monitoring setup completed for real-time visualization of fraud detection and system performance metrics.
 
-### Purpose
+### Grafana Dashboard
 
-This monitoring stack is used to visualize and monitor fraud detection metrics, API health, and system performance during the deployment phase of the Real-Time Financial Fraud Detection Pipeline.
+**File:** `dashboard.json`
+**Screenshot:** `Monitoring_Dashboard.jpeg`
+
+**Panels included:**
+
+| Panel | Metric Source | Query |
+|---|---|---|
+| CPU Usage (%) | Windows Exporter | `100 - (avg(rate(windows_cpu_time_total{mode="idle"}[5m])) * 100)` |
+| Memory Usage (%) | Windows Exporter | `(1 - (windows_memory_physical_free_bytes / windows_memory_physical_total_bytes)) * 100` |
+| Fraud API Health | FastAPI (`prometheus_fastapi_instrumentator`) | `up{job="fastapi"}` |
+
+**To restore this dashboard:**
+1. Open Grafana → **Dashboards** → **New** → **Import**
+2. Upload `dashboard.json`
+3. Select **Prometheus** as the data source when prompted
