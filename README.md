@@ -266,3 +266,62 @@ Interactive API docs (Swagger UI): http://127.0.0.1:8000/docs
 
 Full training report: `training_report.md` (generated locally after running
 `main.py`, not committed — see `.gitignore`).
+
+## Authentication
+
+`/predict` and `/predict/batch` require an API key, passed via the
+`X-API-Key` header. `/`, `/health`, and `/metrics` remain open (no key
+required) since they're used by health checks and Prometheus scraping.
+
+### Setup
+
+1. Copy `.env.example` to `.env`:
+2. Edit `.env` and set a real secret value for `FRAUD_API_KEY`.
+3. **Never commit `.env`** — it's excluded via `.gitignore`.
+
+### Example request with authentication
+
+```powershell
+$headers = @{ "X-API-Key" = "<your-key>"; "Content-Type" = "application/json" }
+$body = '{"step":1,"type":"TRANSFER","amount":181,"nameOrig":"C1305486145","oldbalanceOrig":181,"newbalanceOrig":0,"nameDest":"C553264065","oldbalanceDest":0,"newbalanceDest":0}'
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/predict" -Method Post -Headers $headers -Body $body
+```
+
+Requests without a valid key receive `401 Unauthorized`.
+
+### Input validation
+
+In addition to type/range checks, the API enforces business rules:
+
+* `amount` must be greater than 0
+* `nameOrig` and `nameDest` cannot be the same account
+* `amount` cannot exceed a sanity cap (100,000,000)
+
+Invalid requests receive `422 Unprocessable Entity` with details on which
+rule failed.
+
+## Running with Docker
+
+The API can run in a container, independent of the host machine's Python
+setup.
+
+### Prerequisites
+
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed
+  and running
+* Model artifacts generated locally first (`python main.py` — see setup
+  steps above), since `models/` is not committed to the repo but **is**
+  included in the Docker image at build time
+
+### Build the image
+### Run the container
+
+* `-p 8000:8000` maps container port 8000 to your machine's port 8000
+* `--env-file .env` passes `FRAUD_API_KEY` and other secrets into the
+  container (the `.env` file itself is excluded from the image via
+  `.dockerignore`)
+
+The API is then available at `http://127.0.0.1:8000`, identical to running
+it locally.
+
+### Stop and remove the container
