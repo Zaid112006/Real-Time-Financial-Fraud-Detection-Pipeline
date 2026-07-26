@@ -34,3 +34,6 @@ Thumbs.db
 
 # Charts from legacy scripts
 chart_*.png
+
+# Environment variables / secrets
+.env

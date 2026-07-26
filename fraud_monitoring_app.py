@@ -1,8 +1,11 @@
 import logging
+import os
 from contextlib import asynccontextmanager
 
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from dotenv import load_dotenv
+from fastapi import Depends, FastAPI, HTTPException, Security
+from fastapi.security import APIKeyHeader
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.predict import FraudPredictor
@@ -13,9 +16,32 @@ from src.schemas import (
     TransactionRequest,
 )
 
+# Load variables from .env into the process environment (FRAUD_API_KEY, etc.)
+load_dotenv()
+
 logger = logging.getLogger(__name__)
 
 ml_models = {}
+
+# -- API key auth setup --------------------------------------------
+API_KEY = os.getenv("FRAUD_API_KEY")
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+
+def verify_api_key(provided_key: str = Security(api_key_header)) -> str:
+    """FastAPI dependency: checks the X-API-Key header against FRAUD_API_KEY.
+
+    Raises 401 if missing/incorrect. Raises 500 if the server itself has
+    no FRAUD_API_KEY configured (misconfiguration, not a client error).
+    """
+    if not API_KEY:
+        logger.error("FRAUD_API_KEY is not set on the server (.env missing?)")
+        raise HTTPException(
+            status_code=500, detail="Server misconfiguration: API key not set"
+        )
+    if not provided_key or provided_key != API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid or missing API key")
+    return provided_key
 
 
 @asynccontextmanager
@@ -46,7 +72,10 @@ def health():
 
 
 @app.post("/predict", response_model=PredictionResponse)
-def predict(transaction: TransactionRequest):
+def predict(
+    transaction: TransactionRequest,
+    api_key: str = Depends(verify_api_key),
+):
     predictor = ml_models.get("predictor")
     if predictor is None:
         raise HTTPException(status_code=503, detail="Model not loaded yet")
@@ -62,7 +91,10 @@ def predict(transaction: TransactionRequest):
 
 
 @app.post("/predict/batch", response_model=BatchPredictionResponse)
-def predict_batch(batch: BatchPredictionRequest):
+def predict_batch(
+    batch: BatchPredictionRequest,
+    api_key: str = Depends(verify_api_key),
+):
     predictor = ml_models.get("predictor")
     if predictor is None:
         raise HTTPException(status_code=503, detail="Model not loaded yet")
