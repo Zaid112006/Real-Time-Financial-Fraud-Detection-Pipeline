@@ -325,3 +325,20 @@ The API is then available at `http://127.0.0.1:8000`, identical to running
 it locally.
 
 ### Stop and remove the container
+
+## System Architecture
+
+![Fraud Detection Architecture](fraud_detection_architecture.png)
+
+The pipeline has two flows:
+
+1. **Training (offline)** — `main.py` reads the raw PaySim dataset, runs the
+   full 13-step pipeline, and saves model artifacts to `models/`.
+2. **Live prediction (online)** — Client requests hit the FastAPI app, pass
+   through API key authentication and input validation, then get scored by
+   `FraudPredictor` (loaded from the artifacts above) and return a fraud
+   verdict.
+
+The FastAPI app also exposes `/metrics`, scraped by Prometheus (along with
+Windows Exporter for system metrics) and visualized in Grafana — see
+[Monitoring Setup](#monitoring-setup-week-4) below.
