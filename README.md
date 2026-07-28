@@ -348,7 +348,7 @@ request/response schema, and error code.
 
 ---
 
-# Version 1.0 Release (Day 7)
+# Version 1.0 Release 
 
 The first stable version of the Real-Time Financial Fraud Detection Pipeline has been released.
 
@@ -376,4 +376,20 @@ The repository now contains:
 - Documentation
 - Version-controlled project release
 
+---
+
+---
+
+# API Automated Testing
+
+Automated tests were implemented for the Fraud Detection API using **FastAPI TestClient** and **pytest**.
+
+The test suite validates API functionality without requiring a separate Uvicorn server, by running the application in-process.
+
+## Running API Tests
+
+Before running tests, ensure that model artifacts are generated:
+
+```bash
+python main.py
 
