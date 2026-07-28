@@ -342,3 +342,6 @@ The pipeline has two flows:
 The FastAPI app also exposes `/metrics`, scraped by Prometheus (along with
 Windows Exporter for system metrics) and visualized in Grafana — see
 [Monitoring Setup](#monitoring-setup-week-4) below.
+
+**Full API reference:** see [`API_DOCS.md`](API_DOCS.md) for every endpoint,
+request/response schema, and error code.
