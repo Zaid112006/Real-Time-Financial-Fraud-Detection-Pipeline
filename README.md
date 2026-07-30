@@ -465,8 +465,6 @@ The test suite validates API functionality without requiring a separate Uvicorn 
 ## Running API Tests
 
 Before running tests, ensure that model artifacts are generated:
-
-```bash
 python main.py
 
 ## Fraud Analytics Dashboards (Power BI)
