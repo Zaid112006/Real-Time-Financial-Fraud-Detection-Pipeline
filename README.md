@@ -393,67 +393,48 @@ Before running tests, ensure that model artifacts are generated:
 ```bash
 python main.py
 
-## 📊 Power BI Dashboard
+Power BI Dashboard
 
-The project includes an interactive Power BI dashboard for visualizing fraud detection insights and transaction patterns. The dashboard is designed to provide both executive-level summaries and detailed fraud investigation capabilities.
+Overview
 
-### Dashboard Name
+An interactive Power BI dashboard was developed to analyse financial transaction data and provide business insights into fraud detection. The dashboard enables users to monitor key fraud metrics, identify transaction patterns, and investigate suspicious activities through interactive visualisations.
 
-**Financial Fraud Intelligence Dashboard**
+Dashboard Pages
 
-### Dashboard Features
+Executive Fraud Overview
 
-#### Page 1 – Executive Fraud Overview
+- Displays overall fraud statistics and transaction summary.
+- KPI cards for Total Transactions, Total Fraud, Genuine Transactions, Fraud Percentage, Total Transaction Amount, and Fraud Amount.
+- Fraud vs Genuine distribution.
+- Fraud analysis by transaction type.
+- Transaction trend analysis.
+- Fraud amount distribution.
+- Interactive filtering using Transaction Type, Fraud Status, Transaction Amount, and Step.
 
-- Total Transactions KPI
-- Total Fraud KPI
-- Genuine Transactions KPI
-- Fraud Percentage KPI
-- Total Transaction Amount
-- Fraud Amount
-- Fraud vs Genuine Donut Chart
-- Fraud by Transaction Type
-- Transaction Trend Analysis
-- Fraud Distribution Treemap
-- Fraud Rate Gauge
-- Interactive slicers for:
-  - Transaction Type
-  - Fraud Status
-  - Transaction Amount
-  - Step Range
+Fraud Investigation Dashboard
 
-#### Page 2 – Fraud Investigation Dashboard
+- Displays detailed fraud investigation metrics.
+- Average Transaction Amount.
+- Average Fraud Amount.
+- Maximum Fraud Amount.
+- Fraud Rate.
+- High-risk transaction scatter analysis.
+- Fraud trend by transaction type.
+- Fraud amount comparison across transaction categories.
+- Balance change analysis.
+- Fraud heat map.
+- Detailed transaction table for investigation.
 
-- Average Transaction Amount
-- Average Fraud Amount
-- Maximum Fraud Amount
-- Fraud Rate KPI
-- High-Risk Transaction Scatter Plot
-- Fraud Trend Ribbon Chart
-- Fraud Amount by Transaction Type
-- Balance Change Waterfall Chart
-- Fraud Heat Map (Matrix)
-- Interactive Transaction Details Table
+Power BI Features
 
-### Interactive Features
-
-- Cross-filtering between visuals
-- Drill-down and drill-through analysis
-- Dynamic KPI cards
 - Interactive slicers
-- Custom tooltips
-- Professional financial dashboard theme
-- Two-page responsive report layout
+- Cross-filtering between visuals
+- Dynamic KPI cards
+- Drill-down analysis
+- Professional financial dashboard layout
+- Two-page dashboard design
 
-### Dashboard Files
+Dashboard Files
 
-- `Financial Fraud Intelligence Dashboard.pbix` – Power BI source file
-- `Financial Fraud Intelligence Dashboard.pdf` – Dashboard report export
-
-### Visualization
-
-- Power BI Desktop
-- DAX
-- Power Query
-
-
+Financial Fraud Intelligence Dashboard.pbix
+Financial Fraud Intelligence Dashboard.pdf
