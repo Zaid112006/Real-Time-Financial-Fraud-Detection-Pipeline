@@ -179,7 +179,7 @@ http://localhost:9090
 3. Select **Prometheus** as the data source when prompted
 
 
-## Fraud Prediction API (Week 4)
+## Fraud Prediction API 
 
 ### Overview
 
@@ -200,7 +200,83 @@ API locally, generate them yourself:
    ```
 2. Install dependencies:
    ```
-   pip install -r requirements.txt
+   pip install -r requirements.txt## Fraud Analytics Dashboards (Power BI)
+
+Two Power BI dashboards were built on top of the PaySim dataset to give
+non-technical stakeholders a visual view of fraud patterns, separate from
+the model training pipeline and the Grafana/Prometheus system-health
+monitoring above.
+
+### Transaction Risk Dashboard
+
+**File:** `dashboards/Transaction_Risk_Dashboard.pbix`
+**Screenshot:** `dashboards/Transaction_Risk_Dashboard.jpeg`
+
+A single-page operational view focused on where and how fraud concentrates
+across transaction types, amount buckets, and time of day.
+
+**Key metrics:**
+
+| Metric | Value |
+|---|---|
+| Total transactions | 1,048,575 |
+| Flagged fraud | 1,142 (0.1089% of all txns) |
+| Fraud amount | $1.36B (0.82% of total value) |
+| Avg fraud ticket | $1.19M |
+| Avg legit ticket | $157.5K |
+
+**Panels included:**
+
+| Panel | Shows |
+|---|---|
+| Fraud rate by transaction type | Fraud only ever occurs in `TRANSFER` and `CASH_OUT` — every other type is structurally safe |
+| Volume share by type | Transaction count breakdown across `CASH_IN`, `CASH_OUT`, `DEBIT`, `PAYMENT`, `TRANSFER` |
+| Risk matrix — type × amount bucket | Fraud rate (%) per type/amount cell; `TRANSFER` ≥1M is the highest-risk cell at 78.95% |
+| Transaction & fraud volume by hour | 24-hour cycle of transaction volume vs. fraud count, derived from the `step` field |
+| Amount vs. destination balance error | Fraud separates cleanly from legit traffic once destination balances stop reconciling |
+| Average ticket size | Fraudulent transfers run ~7.6x larger than typical legitimate transactions |
+
+Data source: PaySim synthetic mobile-money transactions (1,048,575 rows).
+
+### Financial Fraud Intelligence Dashboard
+
+**File:** `dashboards/Financial_Fraud_Intelligence_Dashboard.pbix`
+**Export:** `dashboards/Financial_Fraud_Intelligence_Dashboard.pdf`
+
+A two-page executive and investigation report.
+
+#### Page 1 — Executive Fraud Overview
+
+| Metric | Value |
+|---|---|
+| Total transactions | 10,48,575 |
+| Total fraud | 1,142 |
+| Genuine transactions | 10,47,433 |
+| Fraud % | 0.11% |
+| Total amount | $166bn |
+| Fraud amount | $1.36bn |
+
+Includes fraud-vs-genuine breakdown, fraud by transaction type
+(`CASH_OUT` and `TRANSFER` only), transaction trend by `step`, fraud
+distribution between `TRANSFER`/`CASH_OUT`, and a fraud-rate gauge.
+Filterable by fraud status and transaction type.
+
+#### Page 2 — Fraud Investigation Dashboard
+
+| Metric | Value |
+|---|---|
+| Average fraud amount | $11,92,629 |
+| Maximum fraud amount | $1,00,00,000 |
+| Average transaction amount | $1,58,667 |
+| Fraud accounts | 1,142 |
+
+Breaks fraud down by type (`CASH_OUT`: 578 fraud / 373,641 total,
+`TRANSFER`: 564 fraud / 86,753 total), with a balance-change waterfall,
+a high-risk transaction scatter plot (amount vs. `step`), fraud amount by
+transaction type, and a fraud trend by transaction type over `step`.
+
+Data source: PaySim synthetic mobile-money transactions (same dataset as
+the Transaction Risk Dashboard above).
    ```
 3. Run the training pipeline:
    ```
@@ -393,48 +469,3 @@ Before running tests, ensure that model artifacts are generated:
 ```bash
 python main.py
 
-Power BI Dashboard
-
-Overview
-
-An interactive Power BI dashboard was developed to analyse financial transaction data and provide business insights into fraud detection. The dashboard enables users to monitor key fraud metrics, identify transaction patterns, and investigate suspicious activities through interactive visualisations.
-
-Dashboard Pages
-
-Executive Fraud Overview
-
-- Displays overall fraud statistics and transaction summary.
-- KPI cards for Total Transactions, Total Fraud, Genuine Transactions, Fraud Percentage, Total Transaction Amount, and Fraud Amount.
-- Fraud vs Genuine distribution.
-- Fraud analysis by transaction type.
-- Transaction trend analysis.
-- Fraud amount distribution.
-- Interactive filtering using Transaction Type, Fraud Status, Transaction Amount, and Step.
-
-Fraud Investigation Dashboard
-
-- Displays detailed fraud investigation metrics.
-- Average Transaction Amount.
-- Average Fraud Amount.
-- Maximum Fraud Amount.
-- Fraud Rate.
-- High-risk transaction scatter analysis.
-- Fraud trend by transaction type.
-- Fraud amount comparison across transaction categories.
-- Balance change analysis.
-- Fraud heat map.
-- Detailed transaction table for investigation.
-
-Power BI Features
-
-- Interactive slicers
-- Cross-filtering between visuals
-- Dynamic KPI cards
-- Drill-down analysis
-- Professional financial dashboard layout
-- Two-page dashboard design
-
-Dashboard Files
-
-Financial Fraud Intelligence Dashboard.pbix
-Financial Fraud Intelligence Dashboard.pdf
